@@ -1,4 +1,4 @@
-import * as service from '../services/booksService';
+import * as service from '../services/booksService.js';
 
 export const findAll = async (req, res, next) => {
   try {

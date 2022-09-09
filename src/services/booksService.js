@@ -10,7 +10,9 @@ export const findById = async (id) => {
 
 export const create = async (book) => {
   // code here
-  return {};
+  return {
+    p: 'ingfo',
+  };
 };
 
 export const updateById = async (id, book) => {
