@@ -71,3 +71,33 @@
 1. src/services/
 
    Berisi service yang bertugas untuk menghubungkan dengan database (atau aplikasi lain).
+
+## 🗒️ Contribution Guide
+
+### Branch Name
+
+```
+<type>/<short_description>
+
+# contoh
+feature/get-all-books
+```
+
+`<type>` :
+
+- `feature`: saya menambahkan fitur baru
+- `fix`: saya memperbaiki fitur
+
+[Learn More](https://nvie.com/posts/a-successful-git-branching-model/)
+
+### Commit Message (Git Conventional Commits)
+
+```
+<type>(scope): <short_summary>
+
+# contoh
+feat(books): get all books service
+fix(books): missing variable
+```
+
+[Learn More](https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716)
