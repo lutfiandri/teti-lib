@@ -4,18 +4,18 @@ import * as controller from '../controllers/booksController.js';
 const router = express.Router();
 
 // Get all books
-router.get('/', (req, res) => controller.findAll);
+router.get('/', controller.findAll);
 
 // Get specific book by id
-router.get('/:id', (req, res) => controller.findById);
+router.get('/:id', controller.findById);
 
 // Create new book
-router.post('/', (req, res) => controller.create);
+router.post('/', controller.create);
 
 // Update specific book by id
-router.put('/:id', (req, res) => controller.updateById);
+router.put('/:id', controller.updateById);
 
 // Delete specific book by id
-router.delete('/:id', (req, res) => controller.deleteById);
+router.delete('/:id', controller.deleteById);
 
 export default router;
