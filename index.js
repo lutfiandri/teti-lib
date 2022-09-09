@@ -28,4 +28,13 @@ app.get('/', (req, res) => {
 
 app.use('/books', booksRouter);
 
+/* Error handler middleware */
+app.use((err, req, res, next) => {
+  const statusCode = err.statusCode || 500;
+  console.error(err.message, err.stack);
+  res.status(statusCode).json({ message: err.message });
+
+  return;
+});
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}...`));
