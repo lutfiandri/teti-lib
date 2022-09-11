@@ -20,9 +20,17 @@ export const findById = async (req, res, next) => {
 
 export const create = async (req, res, next) => {
   try {
-    // code here
-    res.json({});
+    const book = new Book(req.body);
+    const result = await book.save();
+    res.status(200).json(result);
   } catch (err) {
+    if (['CastError', 'ValidationError'].includes(err?.name)) {
+      next({
+        message: err.message,
+        stack: err.stack,
+        statusCode: 400,
+      });
+    }
     next(err);
   }
 };
