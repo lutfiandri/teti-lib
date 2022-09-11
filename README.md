@@ -38,10 +38,9 @@
 .
 └── teti-lib/
     ├── src/
-    │   ├──db/
     │   ├──routes/
     │   ├──controllers/
-    │   └──services/
+    │   └──models/
     ├── index.js
     └── package.json
 ```
@@ -56,10 +55,6 @@
 
    Berisi inisialisasi server.
 
-1. src/db/
-
-   Berisi koneksi dari database.
-
 1. src/routes/
 
    Berisi endpoint dan terkoneksi dengan controller.
@@ -68,9 +63,9 @@
 
    Berisi controller dan terkoneksi dengan service. Semua logic dari aplikasi harus berada pada controller.
 
-1. src/services/
+1. src/models/
 
-   Berisi service yang bertugas untuk menghubungkan dengan database (atau aplikasi lain).
+   Berisi model dan schema dari tiap-tiap entity.
 
 ## 🗒️ Contribution Guide
 

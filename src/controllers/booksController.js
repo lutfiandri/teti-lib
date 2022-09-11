@@ -1,8 +1,9 @@
-import * as service from '../services/booksService.js';
+import Book from '../models/booksModel.js';
 
 export const findAll = async (req, res, next) => {
   try {
-    res.json(await service.findAll());
+    // code here
+    res.json({});
   } catch (err) {
     next(err);
   }
@@ -10,7 +11,8 @@ export const findAll = async (req, res, next) => {
 
 export const findById = async (req, res, next) => {
   try {
-    res.json(await service.findById(req.params.id));
+    // code here
+    res.json({});
   } catch (err) {
     next(err);
   }
@@ -18,7 +20,8 @@ export const findById = async (req, res, next) => {
 
 export const create = async (req, res, next) => {
   try {
-    res.json(await service.create(req.body));
+    // code here
+    res.json({});
   } catch (err) {
     next(err);
   }
@@ -26,7 +29,8 @@ export const create = async (req, res, next) => {
 
 export const updateById = async (req, res, next) => {
   try {
-    res.json(await service.updateById(req.params.id, req.body));
+    // code here
+    res.json({});
   } catch (err) {
     next(err);
   }
@@ -34,7 +38,8 @@ export const updateById = async (req, res, next) => {
 
 export const deleteById = async (req, res, next) => {
   try {
-    res.json(await service.deleteById(req.params.id));
+    // code here
+    res.json({});
   } catch (err) {
     next(err);
   }
