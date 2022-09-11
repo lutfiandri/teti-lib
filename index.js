@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
+import mongoose, { trusted } from 'mongoose';
 
-import { getBooksCollection, mongoClient, setDb } from './src/db/mongo.js';
 import booksRouter from './src/routes/booksRoute.js';
 import { exit } from 'process';
 
@@ -9,19 +9,21 @@ const app = express();
 
 // TODO: create .env
 const PORT = 3000;
+const MONGO_URI =
+  'mongodb+srv://paw2:glhf-paw-2@cluster0.wgmni83.mongodb.net/teti-lib?retryWrites=true&w=majority';
 
-mongoClient.connect((err) => {
-  if (err) {
-    console.log(`Can't connect to mongodb`);
+mongoose
+  .connect(MONGO_URI)
+  .then(() => console.log('Connected to mongodb'))
+  .catch((err) => {
+    console.error(`Can't connect to mongodb`);
+    console.error(err);
     exit(1);
-  }
-  console.log('Connected to mongodb');
-  const db = mongoClient.db('teti-lib');
-  setDb(db);
-});
+  });
 
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.get('/', (req, res) => {
   res.send('halo dari kelompok 2');
