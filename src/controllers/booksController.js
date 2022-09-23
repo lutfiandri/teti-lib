@@ -22,7 +22,7 @@ export const create = async (req, res, next) => {
   try {
     const book = new Book(req.body);
     const result = await book.save();
-    res.status(200).json(result);
+    res.status(201).json(result);
   } catch (err) {
     if (['CastError', 'ValidationError'].includes(err?.name)) {
       next({
