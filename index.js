@@ -1,16 +1,15 @@
+import process from 'process';
 import express from 'express';
 import cors from 'cors';
-import mongoose, { trusted } from 'mongoose';
+import mongoose from 'mongoose';
 
 import booksRouter from './src/routes/booksRoute.js';
-import { exit } from 'process';
+import getenv from './src/helpers/getenv.js';
 
 const app = express();
 
-// TODO: create .env
-const PORT = 3000;
-const MONGO_URI =
-  'mongodb+srv://paw2:glhf-paw-2@cluster0.wgmni83.mongodb.net/teti-lib?retryWrites=true&w=majority';
+const PORT = getenv('PORT');
+const MONGO_URI = getenv('MONGO_URI');
 
 mongoose
   .connect(MONGO_URI)
@@ -18,7 +17,7 @@ mongoose
   .catch((err) => {
     console.error(`Can't connect to mongodb`);
     console.error(err);
-    exit(1);
+    process.exit(1);
   });
 
 app.use(cors());
