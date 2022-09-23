@@ -1,3 +1,4 @@
+import mongoose from 'mongoose';
 import Book from '../models/booksModel.js';
 
 export const findAll = async (req, res, next) => {
@@ -47,7 +48,10 @@ export const updateById = async (req, res, next) => {
 export const deleteById = async (req, res, next) => {
   try {
     // code here
-    res.json({});
+    const id = mongoose.Types.ObjectId(req.params.id);
+
+    const response = await Book.deleteOne({ _id: id });
+    res.json({response});
   } catch (err) {
     next(err);
   }
