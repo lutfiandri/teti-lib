@@ -4,7 +4,10 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 
 import booksRouter from './src/routes/booksRoute.js';
-import usersRouter from './src/routes/usersRoute.js';
+//ini masih bikin error silakan di uncomment kalo udah ada usersRoute.js nya
+//import usersRouter from './src/routes/usersRoute.js'; 
+
+import borrowsRouter from './src/routes/borrowsRoute.js';
 import getenv from './src/helpers/getenv.js';
 
 const app = express();
@@ -30,6 +33,8 @@ app.get('/', (req, res) => {
 });
 
 app.use('/books', booksRouter);
+
+app.use('/borrows', borrowsRouter);
 
 /* Error handler middleware */
 app.use((err, req, res, next) => {
