@@ -4,6 +4,7 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 
 import booksRouter from './src/routes/booksRoute.js';
+import usersRouter from './src/routes/usersRoute.js';
 import getenv from './src/helpers/getenv.js';
 
 const app = express();
