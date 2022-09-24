@@ -30,7 +30,6 @@ app.get('/', (req, res) => {
 });
 
 app.use('/books', booksRouter);
-app.use('/users', usersRouter);
 
 /* Error handler middleware */
 app.use((err, req, res, next) => {
