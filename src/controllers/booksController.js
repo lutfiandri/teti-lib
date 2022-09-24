@@ -3,10 +3,12 @@ import Book from '../models/booksModel.js';
 
 export const findAll = async (req, res, next) => {
   try {
-    // code here
-    res.json({});
+      const book = await Book.find({});
+
+      res.json(book);
+
   } catch (err) {
-    next(err);
+      next(err);
   }
 };
 
