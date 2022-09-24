@@ -1,5 +1,6 @@
 import express from 'express';
 import * as controller from '../controllers/booksController.js';
+import authGuard from '../middlewares/authGuard.js';
 
 const router = express.Router();
 
@@ -10,7 +11,7 @@ router.get('/', controller.findAll);
 router.get('/:id', controller.findById);
 
 // Create new book
-router.post('/', controller.create);
+router.post('/', authGuard, controller.create);
 
 // Update specific book by id
 router.put('/:id', controller.updateById);

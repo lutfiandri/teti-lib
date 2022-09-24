@@ -3,9 +3,11 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 
-import booksRouter from './src/routes/booksRoute.js';
 import getenv from './src/helpers/getenv.js';
 import errorHandler from './src/middlewares/errorHandler.js';
+
+import authRouter from './src/routes/authRoute.js';
+import booksRouter from './src/routes/booksRoute.js';
 
 const app = express();
 
@@ -29,6 +31,7 @@ app.get('/', (req, res) => {
   res.send('halo dari kelompok 2');
 });
 
+app.use('/auth', authRouter);
 app.use('/books', booksRouter);
 
 app.use(errorHandler);
