@@ -1,14 +1,13 @@
-import mongoose from 'mongoose';
-import Book from '../models/booksModel.js';
+import mongoose from "mongoose";
+import Book from "../models/booksModel.js";
 
 export const findAll = async (req, res, next) => {
   try {
-      const book = await Book.find({});
+    const book = await Book.find({});
 
-      res.json(book);
-
+    res.json(book);
   } catch (err) {
-      next(err);
+    next(err);
   }
 };
 
@@ -27,7 +26,7 @@ export const create = async (req, res, next) => {
     const result = await book.save();
     res.status(201).json(result);
   } catch (err) {
-    if (['CastError', 'ValidationError'].includes(err?.name)) {
+    if (["CastError", "ValidationError"].includes(err?.name)) {
       next({
         message: err.message,
         stack: err.stack,
@@ -41,7 +40,10 @@ export const create = async (req, res, next) => {
 export const updateById = async (req, res, next) => {
   try {
     // code here
-    res.json({});
+    const id = mongoose.Types.ObjectId(req.params.id);
+
+    const response = await Book.updateOne({ _id: id });
+    res.json({ response });
   } catch (err) {
     next(err);
   }
@@ -53,7 +55,7 @@ export const deleteById = async (req, res, next) => {
     const id = mongoose.Types.ObjectId(req.params.id);
 
     const response = await Book.deleteOne({ _id: id });
-    res.json({response});
+    res.json({ response });
   } catch (err) {
     next(err);
   }
