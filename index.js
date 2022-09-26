@@ -3,12 +3,12 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 
-import booksRouter from './src/routes/booksRoute.js';
-//ini masih bikin error silakan di uncomment kalo udah ada usersRoute.js nya
-//import usersRouter from './src/routes/usersRoute.js'; 
-
 import borrowsRouter from './src/routes/borrowsRoute.js';
 import getenv from './src/helpers/getenv.js';
+import errorHandler from './src/middlewares/errorHandler.js';
+
+import authRouter from './src/routes/authRoute.js';
+import booksRouter from './src/routes/booksRoute.js';
 
 const app = express();
 
@@ -32,17 +32,12 @@ app.get('/', (req, res) => {
   res.send('halo dari kelompok 2');
 });
 
+app.use('/auth', authRouter);
 app.use('/books', booksRouter);
-
 app.use('/borrows', borrowsRouter);
 
-/* Error handler middleware */
-app.use((err, req, res, next) => {
-  const statusCode = err.statusCode || 500;
-  console.error(err.message, err.stack);
-  res.status(statusCode).json({ message: err.message });
+app.use(errorHandler);
 
-  return;
-});
-
-app.listen(PORT, () => console.log(`Server running on port ${PORT}...`));
+app.listen(PORT, () =>
+  console.log(`Server running on http://localhost:${PORT}...`)
+);

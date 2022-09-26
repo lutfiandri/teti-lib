@@ -9,14 +9,15 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
+      unique: true,
     },
     password: {
       type: String,
       required: true,
     },
-    borrowedBooks: {
+    borrowedBookIds: {
       type: [mongoose.Types.ObjectId],
-      required: true,
+      required: false,
     },
   },
   { timestamps: true }
