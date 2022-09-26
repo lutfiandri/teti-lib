@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 
+import borrowsRouter from './src/routes/borrowsRoute.js';
 import getenv from './src/helpers/getenv.js';
 import errorHandler from './src/middlewares/errorHandler.js';
 
@@ -33,7 +34,10 @@ app.get('/', (req, res) => {
 
 app.use('/auth', authRouter);
 app.use('/books', booksRouter);
+app.use('/borrows', borrowsRouter);
 
 app.use(errorHandler);
 
-app.listen(PORT, () => console.log(`Server running on  ${PORT}...`));
+app.listen(PORT, () =>
+  console.log(`Server running on http://localhost:${PORT}...`)
+);
