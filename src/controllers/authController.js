@@ -8,7 +8,7 @@ export const signup = async (req, res, next) => {
 
     const encryptedPassword = await bcrypt.hash(password, 10);
 
-    const status = await User.create({
+    const user = await User.create({
       email: email.toLowerCase(),
       password: encryptedPassword,
       name,
@@ -16,10 +16,12 @@ export const signup = async (req, res, next) => {
 
     const token = generateAccessToken({ email });
 
-    res.status(201).json({
-      status,
-      token,
-    });
+    res
+      .status(201)
+      .cookie('access_token', token, {
+        httpOnly: true,
+      })
+      .json({ user });
   } catch (err) {
     if (err?.code === 11000) {
       next({
@@ -65,9 +67,21 @@ export const signin = async (req, res, next) => {
 
     const token = generateAccessToken({ email });
 
-    res.json({
-      user,
-      token,
+    res
+      .status(200)
+      .cookie('access_token', token, {
+        httpOnly: true,
+      })
+      .json({ user });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const signout = async (req, res, next) => {
+  try {
+    res.status(200).clearCookie('access_token').json({
+      status: 'success',
     });
   } catch (err) {
     next(err);
