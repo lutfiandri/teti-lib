@@ -3,8 +3,8 @@ import jwt from 'jsonwebtoken';
 
 const TOKEN_SECRET = getenv('TOKEN_SECRET');
 
-const generateAccessToken = (username) => {
-  return jwt.sign(username, TOKEN_SECRET, { expiresIn: '7d' });
+const generateAccessToken = (payload) => {
+  return jwt.sign(payload, TOKEN_SECRET, { expiresIn: '7d' });
 };
 
 export default generateAccessToken;

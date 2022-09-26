@@ -14,9 +14,9 @@ router.get('/:id', controller.findById);
 router.post('/', authGuard, controller.create);
 
 // Update specific book by id
-router.put('/:id', controller.updateById);
+router.put('/:id', authGuard, controller.updateById);
 
 // Delete specific book by id
-router.delete('/:id', controller.deleteById);
+router.delete('/:id', authGuard, controller.deleteById);
 
 export default router;
