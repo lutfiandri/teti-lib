@@ -41,5 +41,8 @@ app.use('/borrows', borrowsRouter);
 app.use(errorHandler);
 
 app.listen(PORT, () =>
+  // FIXME: change based on current host
   console.log(`Server running on http://localhost:${PORT} ...`)
 );
+
+// TODO: create logger

@@ -15,6 +15,12 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    role: {
+      type: String,
+      required: true,
+      enum: ['USER', 'ADMIN'],
+      default: 'USER',
+    },
     borrowedBookIds: {
       type: [mongoose.Types.ObjectId],
       required: false,
