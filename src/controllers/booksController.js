@@ -13,8 +13,9 @@ export const findAll = async (req, res, next) => {
 
 export const findById = async (req, res, next) => {
   try {
-    // code here
-    res.json({});
+    const id = mongoose.Types.ObjectId(req.params.id);
+    const response = await Book.findById({ _id: id }).exec();
+    res.json({ response });
   } catch (err) {
     next(err);
   }
