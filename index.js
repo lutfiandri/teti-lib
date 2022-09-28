@@ -9,6 +9,7 @@ import errorHandler from './src/middlewares/errorHandler.js';
 
 import authRouter from './src/routes/authRoute.js';
 import booksRouter from './src/routes/booksRoute.js';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 
@@ -25,6 +26,7 @@ mongoose
   });
 
 app.use(cors());
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -39,5 +41,8 @@ app.use('/borrows', borrowsRouter);
 app.use(errorHandler);
 
 app.listen(PORT, () =>
-  console.log(`Server running on http://localhost:${PORT}...`)
+  // FIXME: change based on current host
+  console.log(`Server running on http://localhost:${PORT} ...`)
 );
+
+// TODO: create logger
