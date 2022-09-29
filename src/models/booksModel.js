@@ -11,10 +11,6 @@ const bookSchema = new mongoose.Schema(
       required: true,
       unique: true,
     },
-    description: {
-      type: String,
-      required: true,
-    },
     author: {
       type: String,
       required: true,
@@ -23,35 +19,31 @@ const bookSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    is_fiction: {
+    isFiction: {
       type: Boolean,
       required: true,
     },
-    num_of_books: {
-      type: String,
-      required: false,
+    numOfBooks: {
+      type: Number,
+      required: true,
+    },
+    numOfAvailableBooks: {
+      type: Number,
+      default: function () {
+        return this.numOfBooks;
+      },
     },
     genres: {
       type: [String],
       required: false,
     },
-    num_of_pages: {
-      type: String,
-      required: false,
-    },
-    borrowers_id: {
-      type: [String],
-      required: false,
-    },
-    rating: {
+    numOfPages: {
       type: Number,
       required: false,
-      default: 0,
     },
-    rating_count: {
-      type: Number,
+    borrowerIds: {
+      type: [mongoose.Types.ObjectId],
       required: false,
-      default: 0,
     },
   },
   { timestamps: true }

@@ -94,6 +94,7 @@ export const signin = async (req, res, next) => {
     }
 
     const token = generateAccessToken({
+      id: user._id,
       email,
       isAdmin: user.role === 'ADMIN',
     });
