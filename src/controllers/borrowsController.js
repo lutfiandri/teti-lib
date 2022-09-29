@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
+import Book from '../models/booksModel.js';
 import Borrow from '../models/borrowsModel.js';
+import User from '../models/usersModel.js';
 
 // Admin only
 export const findAll = async (req, res, next) => {
@@ -60,14 +62,43 @@ export const findById = async (req, res, next) => {
 
 export const create = async (req, res, next) => {
   try {
-    const userId = req.user.id;
+    // Verify book availibility
+    const book = await Book.findOne({ _id: req.body.bookId });
+    if (book.numOfAvailableBooks < 1) {
+      next({
+        message: 'out of book',
+        statusCode: 409,
+      });
+      return;
+    }
+
+    // Add book
     const borrow = new Borrow({
-      userId: mongoose.Types.ObjectId(userId),
+      userId: req.user.id,
       bookId: req.body.bookId,
       borrowedAt: new Date(),
       isReturned: false,
     });
     const result = await borrow.save();
+
+    // Add borrwerId and -1 numOfAvailableBooks
+    await Book.updateOne(
+      { _id: mongoose.Types.ObjectId(req.body.bookId) },
+      {
+        numOfAvailableBooks: book.numOfAvailableBooks - 1,
+        borrowerIds: [...book.borrowerIds, req.user.id],
+      }
+    );
+
+    // Add bookId on User.borrowedBookIds
+    const user = await User.findOne({ _id: req.user.id });
+    await User.updateOne(
+      { _id: req.user.id },
+      {
+        borrowedBookIds: [...user.borrowedBookIds, book._id],
+      }
+    );
+
     res.status(201).json(result);
   } catch (err) {
     if (['CastError', 'ValidationError'].includes(err?.name)) {
@@ -83,6 +114,7 @@ export const create = async (req, res, next) => {
 
 export const updateReturn = async (req, res, next) => {
   try {
+    // Change status isReturned to true
     const result = await Borrow.updateOne(
       {
         // look for this doc
@@ -96,6 +128,34 @@ export const updateReturn = async (req, res, next) => {
         returnedAt: new Date(),
       }
     );
+
+    // Remove one borrowerId from book
+    const book = await Book.findOne({ _id: req.body.bookId });
+
+    const borrowerIndex = book.borrowerIds.indexOf(req.user.id);
+    book.borrowerIds.splice(borrowerIndex, 1);
+
+    await Book.updateOne(
+      { _id: mongoose.Types.ObjectId(req.body.bookId) },
+      {
+        numOfAvailableBooks: book.numOfAvailableBooks + 1,
+        borrowerIds: book.borrowerIds,
+      }
+    );
+
+    // Remove one borrowedBookId from user
+    const user = await User.findOne({ _id: req.user.id });
+
+    const userIndex = user.borrowedBookIds.indexOf(req.body.bookId);
+    user.borrowedBookIds.splice(userIndex, 1);
+
+    await User.updateOne(
+      { _id: mongoose.Types.ObjectId(req.user.id) },
+      {
+        borrowedBookIds: user.borrowedBookIds,
+      }
+    );
+
     res.status(200).json(result);
   } catch (err) {
     if (['CastError', 'ValidationError'].includes(err?.name)) {
