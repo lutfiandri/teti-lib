@@ -16,13 +16,18 @@ export const authenticate = (req, res, next) => {
   });
 };
 
-export const authorizeAdmin = (req, res, next) => {
-  console.log(req.user);
-  if (req.user.isAdmin) {
-    console.log(1);
+export const authorizeUser = (req, res, next) => {
+  if (!req.user.isAdmin) {
     next();
   } else {
-    console.log(2);
+    return res.sendStatus(403);
+  }
+};
+
+export const authorizeAdmin = (req, res, next) => {
+  if (req.user.isAdmin) {
+    next();
+  } else {
     return res.sendStatus(403);
   }
 };
