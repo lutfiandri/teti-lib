@@ -14,10 +14,15 @@ router.get('/user', auth.authenticate, controller.findAllByUserId);
 router.get('/:id', auth.authenticate, controller.findById);
 
 // Borrow new book
-router.post('/', auth.authenticate, controller.create);
+router.post('/', auth.authenticate, auth.authorizeUser, controller.create);
 
 // Return borrowed book
-router.put('/return', auth.authenticate, controller.updateReturn);
+router.put(
+  '/return',
+  auth.authenticate,
+  auth.authorizeUser,
+  controller.updateReturn
+);
 
 // Delete specific borrow by id
 // router.delete('/:id', controller.deleteById);
