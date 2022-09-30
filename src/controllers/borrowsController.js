@@ -8,6 +8,9 @@ export const findAll = async (req, res, next) => {
   try {
     const filter = {};
 
+    // if user -> only show theirs
+    if (!req.user.isAdmin) filter.userId = req.user.id;
+
     // isReturned
     if (req.query.returned === 'true') filter.isReturned = true;
     if (req.query.returned === 'false') filter.isReturned = false;
