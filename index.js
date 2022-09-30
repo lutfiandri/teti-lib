@@ -2,14 +2,15 @@ import process from 'process';
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import cookieParser from 'cookie-parser';
 
-import borrowsRouter from './src/routes/borrowsRoute.js';
 import getenv from './src/helpers/getenv.js';
 import errorHandler from './src/middlewares/errorHandler.js';
+import requestLogger from './src/middlewares/requestLogger.js';
 
+import borrowsRouter from './src/routes/borrowsRoute.js';
 import authRouter from './src/routes/authRoute.js';
 import booksRouter from './src/routes/booksRoute.js';
-import cookieParser from 'cookie-parser';
 
 const app = express();
 
@@ -29,6 +30,8 @@ app.use(cors());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(requestLogger);
 
 app.get('/', (req, res) => {
   res.send('halo dari kelompok 2');
