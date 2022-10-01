@@ -40,7 +40,9 @@
     ├── src/
     │   ├──routes/
     │   ├──controllers/
-    │   └──models/
+    │   ├──models/
+    │   ├──middlewares/
+    │   └──helpers/
     ├── index.js
     └── package.json
 ```
@@ -66,6 +68,14 @@
 1. src/models/
 
    Berisi model dan schema dari tiap-tiap entity.
+
+1. src/middlewares/
+
+   Berisi express middleware.
+
+1. src/helpers/
+
+   Berisi helper functions.
 
 ## 🗒️ Contribution Guide
 
