@@ -11,3 +11,10 @@ export const httpBadRequest = (message = 'Bad request') => {
     message: message,
   };
 };
+
+export const httpException = (statusCode, message) => {
+  return {
+    statusCode: statusCode,
+    message: message,
+  };
+};
