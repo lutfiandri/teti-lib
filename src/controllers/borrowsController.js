@@ -1,5 +1,9 @@
 import mongoose from 'mongoose';
 import {
+  getDetailedBorrow,
+  getDetailedBorrows,
+} from '../helpers/getDetailedBorrow.js';
+import {
   httpBadRequest,
   httpException,
   httpNotFound,
@@ -23,7 +27,9 @@ export const findAll = async (req, res, next) => {
 
     const borrows = await Borrow.find(filter);
 
-    res.json(successResponseBuilder({ borrows: borrows }));
+    const detailedBorrows = await getDetailedBorrows(borrows);
+
+    res.json(successResponseBuilder({ borrows: detailedBorrows }));
   } catch (err) {
     next(err);
   }
@@ -42,7 +48,9 @@ export const findById = async (req, res, next) => {
     const borrow = await Borrow.findOne(filter);
     if (!borrow) throw httpNotFound();
 
-    res.json(successResponseBuilder({ borrow: borrow }));
+    const detailedBorrow = await getDetailedBorrow(borrow);
+
+    res.json(successResponseBuilder({ borrow: detailedBorrow }));
   } catch (err) {
     next(err);
   }
@@ -88,16 +96,8 @@ export const create = async (req, res, next) => {
       }
     );
 
-    const bookResult = await Book.findOne({ _id: req.body.bookId });
-    const userResult = await User.findOne({ _id: req.user.id });
-
-    res.status(201).json(
-      successResponseBuilder({
-        borrow: borrowResult,
-        book: bookResult,
-        user: userResult,
-      })
-    );
+    const detailedBorrow = await getDetailedBorrow(borrowResult);
+    res.status(201).json(successResponseBuilder({ borrow: detailedBorrow }));
   } catch (err) {
     if (['CastError', 'ValidationError'].includes(err?.name)) {
       next(httpBadRequest(err.message));
@@ -151,16 +151,9 @@ export const updateReturn = async (req, res, next) => {
       }
     );
 
-    const bookResult = await Book.findOne({ _id: req.body.bookId });
-    const userResult = await User.findOne({ _id: req.user.id });
+    const detailedBorrow = await getDetailedBorrow(borrow);
 
-    res.status(200).json(
-      successResponseBuilder({
-        borrow: borrow,
-        book: bookResult,
-        user: userResult,
-      })
-    );
+    res.status(200).json(successResponseBuilder({ borrow: detailedBorrow }));
   } catch (err) {
     if (['CastError', 'ValidationError'].includes(err?.name)) {
       next(httpBadRequest(err.message));
