@@ -8,6 +8,7 @@ import fileUpload from 'express-fileupload';
 import getenv from './src/helpers/getenv.js';
 import errorHandler from './src/middlewares/errorHandler.js';
 import requestLogger from './src/middlewares/requestLogger.js';
+import { BASEURL } from './src/helpers/constants.js';
 
 import borrowsRouter from './src/routes/borrowsRoute.js';
 import authRouter from './src/routes/authRoute.js';
@@ -48,7 +49,4 @@ app.use('/uploads', uploadsRouter);
 
 app.use(errorHandler);
 
-app.listen(PORT, () =>
-  // FIXME: change based on current host
-  console.log(`Server running on http://localhost:${PORT} ...`)
-);
+app.listen(PORT, () => console.info(`Server running on ${BASEURL}`));
