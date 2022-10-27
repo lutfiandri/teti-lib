@@ -1,9 +1,19 @@
 import mongoose from 'mongoose';
+import {
+  getDetailedBorrow,
+  getDetailedBorrows,
+} from '../helpers/getDetailedBorrow.js';
+import {
+  httpBadRequest,
+  httpException,
+  httpNotFound,
+} from '../helpers/httpExceptionBuilder.js';
+import { successResponseBuilder } from '../helpers/responseBuilder.js';
 import Book from '../models/booksModel.js';
 import Borrow from '../models/borrowsModel.js';
 import User from '../models/usersModel.js';
 
-// Admin only
+// Admin can see all; user only can see theirs
 export const findAll = async (req, res, next) => {
   try {
     const filter = {};
@@ -15,49 +25,32 @@ export const findAll = async (req, res, next) => {
     if (req.query.returned === 'true') filter.isReturned = true;
     if (req.query.returned === 'false') filter.isReturned = false;
 
-    const borrow = await Borrow.find(filter);
-
-    res.json(borrow);
-  } catch (err) {
-    next(err);
-  }
-};
-
-export const findAllByUserId = async (req, res, next) => {
-  try {
-    let userId = req.user.isAdmin ? req.body.userId : req.user.id;
-
-    const filter = { userId: userId };
-
-    // isReturned
-    if (req.query.returned === 'true') filter.isReturned = true;
-    if (req.query.returned === 'false') filter.isReturned = false;
-
     const borrows = await Borrow.find(filter);
-    res.json(borrows);
+
+    const detailedBorrows = await getDetailedBorrows(borrows);
+
+    res.json(successResponseBuilder({ borrows: detailedBorrows }));
   } catch (err) {
     next(err);
   }
 };
 
+// Admin can see all; user only can see theirs
 export const findById = async (req, res, next) => {
   try {
-    const id = mongoose.Types.ObjectId(req.params.id);
+    const filter = {};
 
-    const borrow = await Borrow.findById(id).exec();
+    // if user -> only show theirs
+    if (!req.user.isAdmin) filter.userId = req.user.id;
 
-    if (borrow === null) {
-      next({
-        message: `Borrowing session with id ${id} is not found`,
-        stack: null,
-        statusCode: 404,
-      });
-    }
+    filter._id = mongoose.Types.ObjectId(req.params.id);
 
-    res.json({
-      id: id,
-      borrow: borrow,
-    });
+    const borrow = await Borrow.findOne(filter);
+    if (!borrow) throw httpNotFound();
+
+    const detailedBorrow = await getDetailedBorrow(borrow);
+
+    res.json(successResponseBuilder({ borrow: detailedBorrow }));
   } catch (err) {
     next(err);
   }
@@ -67,26 +60,27 @@ export const create = async (req, res, next) => {
   try {
     // Verify book availibility
     const book = await Book.findOne({ _id: req.body.bookId });
+    if (!book) throw httpNotFound('Book not found');
     if (book.numOfAvailableBooks < 1) {
-      next({
-        message: 'out of book',
-        statusCode: 409,
-      });
-      return;
+      throw httpException(409, 'Out of book');
     }
 
-    // Add book
+    // Verify user is valid
+    const user = await User.findOne({ _id: req.user.id });
+    if (!user) throw httpNotFound('User not found');
+
+    // Add borrow
     const borrow = new Borrow({
       userId: req.user.id,
       bookId: req.body.bookId,
       borrowedAt: new Date(),
       isReturned: false,
     });
-    const result = await borrow.save();
+    const borrowResult = await borrow.save();
 
     // Add borrwerId and -1 numOfAvailableBooks
     await Book.updateOne(
-      { _id: mongoose.Types.ObjectId(req.body.bookId) },
+      { _id: req.body.bookId },
       {
         numOfAvailableBooks: book.numOfAvailableBooks - 1,
         borrowerIds: [...book.borrowerIds, req.user.id],
@@ -94,7 +88,7 @@ export const create = async (req, res, next) => {
     );
 
     // Add bookId on User.borrowedBookIds
-    const user = await User.findOne({ _id: req.user.id });
+
     await User.updateOne(
       { _id: req.user.id },
       {
@@ -102,14 +96,11 @@ export const create = async (req, res, next) => {
       }
     );
 
-    res.status(201).json(result);
+    const detailedBorrow = await getDetailedBorrow(borrowResult);
+    res.status(201).json(successResponseBuilder({ borrow: detailedBorrow }));
   } catch (err) {
     if (['CastError', 'ValidationError'].includes(err?.name)) {
-      next({
-        message: err.message,
-        stack: err.stack,
-        statusCode: 400,
-      });
+      next(httpBadRequest(err.message));
     }
     next(err);
   }
@@ -118,7 +109,7 @@ export const create = async (req, res, next) => {
 export const updateReturn = async (req, res, next) => {
   try {
     // Change status isReturned to true
-    const result = await Borrow.updateOne(
+    const borrow = await Borrow.findOneAndUpdate(
       {
         // look for this doc
         userId: mongoose.Types.ObjectId(req.user.id),
@@ -131,6 +122,7 @@ export const updateReturn = async (req, res, next) => {
         returnedAt: new Date(),
       }
     );
+    if (!borrow) throw httpNotFound('Borrow not found');
 
     // Remove one borrowerId from book
     const book = await Book.findOne({ _id: req.body.bookId });
@@ -159,25 +151,26 @@ export const updateReturn = async (req, res, next) => {
       }
     );
 
-    res.status(200).json(result);
+    const detailedBorrow = await getDetailedBorrow(borrow);
+
+    res.status(200).json(successResponseBuilder({ borrow: detailedBorrow }));
   } catch (err) {
     if (['CastError', 'ValidationError'].includes(err?.name)) {
-      next({
-        message: err.message,
-        stack: err.stack,
-        statusCode: 400,
-      });
+      next(httpBadRequest(err.message));
     }
     next(err);
   }
 };
 
+// not used, admin and user may not delete the borrows log
 export const deleteById = async (req, res, next) => {
   try {
     const id = mongoose.Types.ObjectId(req.params.id);
 
-    const response = await Borrow.deleteOne({ _id: id });
-    res.json({ response });
+    const response = await Borrow.findOneAndDelete({ _id: id });
+    if (!response) throw httpNotFound();
+
+    res.json({ deletedBorrowId: id });
   } catch (err) {
     next(err);
   }
