@@ -102,3 +102,8 @@ dist
 
 # TernJS port file
 .tern-port
+
+
+# Don't save anything from uploads, except .gitkeep
+public/uploads/*
+!public/uploads/.gitkeep
