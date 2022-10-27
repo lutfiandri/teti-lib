@@ -33,6 +33,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload({ limits: 10 * 1024 * 1024 }));
+app.use(express.static('public'));
 
 app.use(requestLogger);
 
