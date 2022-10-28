@@ -12,6 +12,20 @@ export const httpBadRequest = (message = 'Bad request') => {
   };
 };
 
+export const httpUnauthorized = (message = 'Unauthorized') => {
+  return {
+    statusCode: 401,
+    message: message,
+  };
+};
+
+export const httpForbidden = (message = 'Forbidden') => {
+  return {
+    statusCode: 403,
+    message: message,
+  };
+};
+
 export const httpException = (statusCode, message) => {
   return {
     statusCode: statusCode,

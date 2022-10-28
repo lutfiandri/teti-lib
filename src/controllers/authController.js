@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import generateAccessToken from '../helpers/auth/generateAccessToken.js';
+import { successResponseBuilder } from '../helpers/responseBuilder.js';
 import User from '../models/usersModel.js';
 
 export const signupAdmin = async (req, res, next) => {
@@ -15,7 +16,7 @@ export const signupAdmin = async (req, res, next) => {
       role: 'ADMIN',
     });
 
-    res.status(201).json({ user });
+    res.status(201).json(successResponseBuilder({ user: user }));
   } catch (err) {
     if (err?.code === 11000) {
       next({
@@ -49,7 +50,7 @@ export const signup = async (req, res, next) => {
       name,
     });
 
-    res.status(201).json({ user });
+    res.status(201).json(successResponseBuilder({ user: user }));
   } catch (err) {
     if (err?.code === 11000) {
       next({
@@ -104,7 +105,7 @@ export const signin = async (req, res, next) => {
       .cookie('access_token', token, {
         httpOnly: true,
       })
-      .json({ user });
+      .json(successResponseBuilder({ user: user }));
   } catch (err) {
     next(err);
   }
@@ -112,7 +113,7 @@ export const signin = async (req, res, next) => {
 
 export const signout = async (req, res, next) => {
   try {
-    res.clearCookie('access_token').sendStatus(200);
+    res.clearCookie('access_token').status(200).json(successResponseBuilder());
   } catch (err) {
     next(err);
   }
