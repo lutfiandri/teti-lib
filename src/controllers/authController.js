@@ -16,7 +16,15 @@ export const signupAdmin = async (req, res, next) => {
       role: 'ADMIN',
     });
 
-    res.status(201).json(successResponseBuilder({ user: user }));
+    const token = generateAccessToken({
+      id: user._id,
+      email,
+      isAdmin: true,
+    });
+
+    res
+      .status(201)
+      .json(successResponseBuilder({ user: user, accessToken: token }));
   } catch (err) {
     if (err?.code === 11000) {
       next({
@@ -50,7 +58,15 @@ export const signup = async (req, res, next) => {
       name,
     });
 
-    res.status(201).json(successResponseBuilder({ user: user }));
+    const token = generateAccessToken({
+      id: user._id,
+      email,
+      isAdmin: false,
+    });
+
+    res
+      .status(201)
+      .json(successResponseBuilder({ user: user, accessToken: token }));
   } catch (err) {
     if (err?.code === 11000) {
       next({
@@ -102,19 +118,16 @@ export const signin = async (req, res, next) => {
 
     res
       .status(200)
-      .cookie('access_token', token, {
-        httpOnly: true,
-      })
-      .json(successResponseBuilder({ user: user }));
+      .json(successResponseBuilder({ user: user, accessToken: token }));
   } catch (err) {
     next(err);
   }
 };
 
-export const signout = async (req, res, next) => {
-  try {
-    res.clearCookie('access_token').status(200).json(successResponseBuilder());
-  } catch (err) {
-    next(err);
-  }
-};
+// export const signout = async (req, res, next) => {
+//   try {
+//     res.clearCookie('access_token').status(200).json(successResponseBuilder());
+//   } catch (err) {
+//     next(err);
+//   }
+// };
