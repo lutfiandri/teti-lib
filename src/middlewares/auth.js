@@ -9,7 +9,8 @@ import { errorResponseBuilder } from '../helpers/responseBuilder.js';
 const TOKEN_SECRET = getenv('TOKEN_SECRET');
 
 export const authenticate = (req, res, next) => {
-  const token = req.cookies.access_token;
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
 
   if (!token)
     return res.status(401).json(errorResponseBuilder(httpUnauthorized()));
