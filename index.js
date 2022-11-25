@@ -8,7 +8,7 @@ import fileUpload from 'express-fileupload';
 import getenv from './src/helpers/getenv.js';
 import errorHandler from './src/middlewares/errorHandler.js';
 import requestLogger from './src/middlewares/requestLogger.js';
-import { BASEURL } from './src/helpers/constants.js';
+// import { BASEURL } from './src/helpers/constants.js';
 
 import borrowsRouter from './src/routes/borrowsRoute.js';
 import authRouter from './src/routes/authRoute.js';
@@ -17,7 +17,7 @@ import usersRouter from './src/routes/usersRoute.js';
 
 const app = express();
 
-const PORT = getenv('PORT');
+const PORT = process.env.PORT;
 const MONGO_URI = getenv('MONGO_URI');
 
 mongoose
