@@ -107,3 +107,9 @@ dist
 # Don't save anything from uploads, except .gitkeep
 public/uploads/*
 !public/uploads/.gitkeep
+
+
+
+# IDE
+.vscode/
+.vs/

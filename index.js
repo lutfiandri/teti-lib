@@ -14,7 +14,6 @@ import borrowsRouter from './src/routes/borrowsRoute.js';
 import authRouter from './src/routes/authRoute.js';
 import booksRouter from './src/routes/booksRoute.js';
 import usersRouter from './src/routes/usersRoute.js';
-import uploadsRouter from './src/routes/uploadsRoute.js';
 
 const app = express();
 
@@ -47,7 +46,6 @@ app.use('/auth', authRouter);
 app.use('/books', booksRouter);
 app.use('/borrows', borrowsRouter);
 app.use('/users', usersRouter);
-app.use('/uploads', uploadsRouter);
 
 app.use(errorHandler);
 
