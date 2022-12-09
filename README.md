@@ -4,6 +4,20 @@
 
 <p align="center">Rest API Peminjaman Buku | Kuliah Pengembangan Aplikasi Web</p><br>
 
+## Related Repository
+
+- Frontend Repo: [https://github.com/lutfiandri/teti-lib-frontend](https://github.com/lutfiandri/teti-lib-frontend)
+- Backend Repo: [https://github.com/lutfiandri/teti-lib](https://github.com/lutfiandri/teti-lib) (current)
+
+## Links
+
+- Slide Presentasi (UTS): [Click Here](https://docs.google.com/presentation/d/11VY7UUr_BRWChc6mfLjOeOIf3Z26-PW4ceO8A2Kb4oI)
+- Video Presentasi (UTS): [Click Here](https://s.id/pawPresentasiKelompok2)
+- Slide Presentasi (Akhir): [Click Here](https://www.canva.com/design/DAFSQCxxR6Q/3yai7zDDPaF2WBaAPU3OfA/view?utm_content=DAFSQCxxR6Q&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink#1)
+- Front End: https://teti-library.vercel.app/
+- Back End: https://teti-lib.vercel.app/
+- Postman Docs: [Click Here](https://documenter.getpostman.com/view/23529898/2s8YzS1iXv)
+
 ## ⚡️ Development Setup
 
 ### Prerequisites
